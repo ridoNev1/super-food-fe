@@ -106,7 +106,7 @@ const ModalEditMenu: FC<IModalEditMenu> = ({ selectedMenu }) => {
     }
 
     editMenu(selectedMenu.id, formData).then(() => {
-      fetchListMenu(10, 1, "");
+      fetchListMenu(100, 1, "");
       setFiles([]);
       reset();
       const closeButton = document.querySelector(

@@ -70,7 +70,7 @@ const ModalAddMenu: FC = () => {
     });
 
     createMenu(formData).then(() => {
-      fetchListMenu(10, 1, "");
+      fetchListMenu(100, 1, "");
       setFiles([]);
       reset();
       const closeButton = document.querySelector(

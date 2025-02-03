@@ -21,7 +21,7 @@ const Homepage: FC = () => {
   const { user } = useAuthStore();
 
   useEffect(() => {
-    fetchListMenu(10, 1);
+    fetchListMenu(100, 1);
   }, [fetchListMenu]);
 
   useEffect(() => {
@@ -30,7 +30,7 @@ const Homepage: FC = () => {
   }, []);
 
   useEffect(() => {
-    fetchListMenu(10, 1, debouncedSearch);
+    fetchListMenu(100, 1, debouncedSearch);
   }, [debouncedSearch, fetchListMenu]);
 
   const categories = [

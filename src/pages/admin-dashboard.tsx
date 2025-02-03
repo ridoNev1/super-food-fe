@@ -22,7 +22,7 @@ const AdminDashboard = () => {
   });
 
   useEffect(() => {
-    fetchListMenu(10, 1);
+    fetchListMenu(100, 1);
   }, [fetchListMenu]);
 
   useEffect(() => {
