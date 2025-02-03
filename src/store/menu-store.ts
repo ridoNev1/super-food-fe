@@ -2,6 +2,10 @@ import { create } from "zustand";
 import axiosInstance from "@/lib/axiosInstance";
 import { IPagination } from "@/lib/basic-type.type";
 import Cookies from "universal-cookie";
+import "notyf/notyf.min.css";
+import { Notyf } from "notyf";
+
+const notyf = new Notyf();
 
 const cookies = new Cookies(null, { path: "/" });
 
@@ -34,6 +38,12 @@ interface IMenuStore {
   minCart: (menu: IMenu) => void;
   clearCart: () => void;
   loadCartFromCookies: () => void;
+  createMenu: (menuData: FormData) => Promise<unknown>;
+  editMenu: (menuId: number, menuData: FormData) => Promise<unknown>;
+  isCreating: boolean;
+  isEditing: boolean;
+  isDeleting: boolean;
+  deleteMenu: (menuId: number) => Promise<unknown>;
 }
 
 const getCartFromCookies = (): IMenu[] => {
@@ -64,6 +74,9 @@ const useMenuStore = create<IMenuStore>((set) => ({
   },
 
   cart: getCartFromCookies(),
+  isCreating: false,
+  isEditing: false,
+  isDeleting: false,
 
   addCart: (menu) => {
     set((state) => {
@@ -141,6 +154,76 @@ const useMenuStore = create<IMenuStore>((set) => ({
     } catch (error) {
       console.error("🚨 Fetch Menu Error:", error);
       set((state) => ({ listMenu: { ...state.listMenu, isLoading: false } }));
+    }
+  },
+
+  createMenu: async (menuData: FormData) => {
+    set({ isCreating: true });
+    try {
+      const response = await axiosInstance.post("/master-menu/menu", menuData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      notyf.success({
+        position: { x: "center", y: "top" },
+        message: response?.data?.message,
+      });
+
+      return response;
+    } catch (error) {
+      console.error("🚨 Create Menu Error:", error);
+      return error;
+    } finally {
+      set({ isCreating: false });
+    }
+  },
+  editMenu: async (menuId: number, menuData: FormData) => {
+    set({ isEditing: true });
+
+    try {
+      const response = await axiosInstance.put(
+        `/master-menu/menu/${menuId}`,
+        menuData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      notyf.success({
+        position: { x: "center", y: "top" },
+        message: response?.data?.message,
+      });
+
+      return response;
+    } catch (error) {
+      console.error("🚨 Edit Menu Error:", error);
+      return error;
+    } finally {
+      set({ isEditing: false });
+    }
+  },
+  deleteMenu: async (menuId: number) => {
+    set({ isDeleting: true });
+    try {
+      const response = await axiosInstance.delete(
+        `/master-menu/menu/${menuId}`
+      );
+
+      notyf.success({
+        position: { x: "center", y: "top" },
+        message: response?.data?.message,
+      });
+
+      return response;
+    } catch (error) {
+      console.error("🚨 Delete Menu Error:", error);
+      return error;
+    } finally {
+      set({ isDeleting: false });
     }
   },
 }));

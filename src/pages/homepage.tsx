@@ -9,10 +9,12 @@ import { FC, useEffect, useState } from "react";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css";
 import useDebounce from "@/hooks/useDebounce";
+import { useNavigate } from "react-router-dom";
 
 const notyf = new Notyf();
 
 const Homepage: FC = () => {
+  const navigate = useNavigate();
   const { listMenu, fetchListMenu, cart, addCart, minCart } = useMenuStore();
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 500);
@@ -21,6 +23,11 @@ const Homepage: FC = () => {
   useEffect(() => {
     fetchListMenu(10, 1);
   }, [fetchListMenu]);
+
+  useEffect(() => {
+    if (user?.user_level === 1) navigate("/admin-dashboard");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     fetchListMenu(10, 1, debouncedSearch);

@@ -6,12 +6,20 @@ import useAuthStore from "@/store/auth-store";
 import useOrderStore from "@/store/order-store";
 import { format } from "date-fns";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const HistoryOrder = () => {
+  const navigate = useNavigate();
+
   const { isLoading, fetchOrders, orders } = useOrderStore();
   const { user } = useAuthStore();
   useEffect(() => {
     if (user?.id) fetchOrders(user?.id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (user?.user_level === 1) navigate("/admin-dashboard");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

@@ -17,7 +17,7 @@ export interface RegisterForm {
   user_level: number;
 }
 
-interface IAuthModal {
+export interface IAuthModal {
   button?: {
     className?: string;
     children?: React.ReactNode;
