@@ -16,7 +16,7 @@ const Navbar: FC<INavbar> = ({ isFloating }) => {
   const { user, logout } = useAuthStore();
   const { cart } = useMenuStore();
   const { clearCart, addCart, minCart } = useMenuStore();
-  const { createOrder } = useOrderStore();
+  const { createOrder, isLoading } = useOrderStore();
   return (
     <>
       <div
@@ -154,11 +154,16 @@ const Navbar: FC<INavbar> = ({ isFloating }) => {
                                 menu_id: el.id,
                                 quantity: el.buyQuantity || 0,
                               }))
-                            );
-                            clearCart();
-                            navigate("/history-order");
+                            ).then(() => {
+                              clearCart();
+                              navigate("/history-order");
+                            });
                           }}
+                          disabled={isLoading}
                         >
+                          {isLoading && (
+                            <span className="loading loading-spinner"></span>
+                          )}
                           Checkout
                         </button>
                       </li>

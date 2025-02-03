@@ -34,7 +34,7 @@ interface IOrderStore {
   createOrder: (
     user_id: number,
     menu_items: IOrderCreatePayload[]
-  ) => Promise<void>;
+  ) => Promise<unknown>;
 }
 
 const useOrderStore = create<IOrderStore>((set) => ({
@@ -75,9 +75,11 @@ const useOrderStore = create<IOrderStore>((set) => ({
         position: { x: "center", y: "top" },
         message: "Order Placed Success!",
       });
+      return response;
     } catch (error) {
       console.error("🚨 Create Order Error:", error);
       set({ error: "Failed to create order.", isLoading: false });
+      return error;
     }
   },
 }));
